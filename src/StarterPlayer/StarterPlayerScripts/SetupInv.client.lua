@@ -37,7 +37,12 @@ local Rocrastinate = require(ReplicatedStorage:WaitForChild("Rocrastinate"))
 local RootReducer = require(InvComponent.RootReducer)
 local Actions = require(InvComponent.Actions)
 local inventoryStore = Rocrastinate.createStore(RootReducer.reducer, {}) -- setting intiial inventory store state
+local PlayerGui = Player:WaitForChild("PlayerGui")
+local inventoryDisplay = require(ReplicatedStorage:WaitForChild("InventoryDisplay"))
+
 
 
 inventoryStore.dispatch(Actions.setInventory(ReturnInv()))
 
+
+inventoryDisplay.new(inventoryStore, PlayerGui)

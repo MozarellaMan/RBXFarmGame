@@ -45,7 +45,6 @@ function InventoryClass:AddItem(Item, Amount)
 			return -1
 		end
 		self.Contents[itemName].Amount = newAmount -- increment amount of item if it already exists
-		print(" ")
 	end
 end
 
