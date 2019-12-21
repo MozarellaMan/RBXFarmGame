@@ -25,17 +25,18 @@ function InventoryDisplay:Redraw( reducedState )
         for i, item in pairs(reducedState.inventory)do
             print("gui!")
             print("Name:" .. i .. "\nAmount: " .. item.Amount .. "\nType: " .. item.Content.ItemClass)
-    
-            local ItemContainer = Instance.new("Frame")
-            ItemContainer.Name = "Item" .. count
-            ItemContainer.Parent = self.gui.Frame
-            local TextBox = MaterialR:Get("TextButton")
-            TextBox.AnchorPoint = Vector2.new(.5, .5)
-            TextBox.Size = UDim2.new(0, 100, 0, 100)
-            TextBox.Theme = "Light"
-            TextBox.Text = "Name:" .. i --.. "\nAmount: " .. item.Amount .. "\nType: " .. item.Content.ItemClass
-            TextBox.Parent = self.gui.Frame:WaitForChild("Item" .. count)
-            count = count+1
+            if(i ~= "" or i ~=  nil) then 
+                local ItemContainer = Instance.new("Frame")
+                ItemContainer.Name = "Item" .. count
+                ItemContainer.Parent = self.gui.Frame
+                local TextBox = MaterialR:Get("TextButton")
+                TextBox.AnchorPoint = Vector2.new(.5, .5)
+                TextBox.Size = UDim2.new(0, 100, 0, 100)
+                TextBox.Theme = "Light"
+                TextBox.Text = "Name:" .. i --.. "\nAmount: " .. item.Amount .. "\nType: " .. item.Content.ItemClass
+                TextBox.Parent = self.gui.Frame:WaitForChild("Item" .. count)
+                count = count+1
+            end
         end
     end
 
