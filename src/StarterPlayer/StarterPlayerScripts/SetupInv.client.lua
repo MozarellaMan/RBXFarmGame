@@ -3,6 +3,7 @@ local Player = game.Players.LocalPlayer
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Event = ReplicatedStorage:WaitForChild("DataEvent", 30)
 local Item = require(game.ReplicatedStorage.ItemClass)
+local InvComponent = ReplicatedStorage:WaitForChild("InvComponent", 30)
 
 local invData
 
@@ -31,3 +32,12 @@ end
 Event.OnClientEvent:Connect(UpdateInv)
 
 SetupInv()
+
+local Rocrastinate = require(ReplicatedStorage:WaitForChild("Rocrastinate"))
+local RootReducer = require(InvComponent.RootReducer)
+local Actions = require(InvComponent.Actions)
+local inventoryStore = Rocrastinate.createStore(RootReducer.reducer, {}) -- setting intiial inventory store state
+
+
+inventoryStore.dispatch(Actions.setInventory(ReturnInv()))
+
