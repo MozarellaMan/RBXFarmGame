@@ -6,7 +6,7 @@ local Item = require(game.ReplicatedStorage.ItemClass)
 
 local invData
 
-function setupInv()
+function SetupInv()
 	Event:FireServer()
 	
 	wait(invData)
@@ -20,10 +20,14 @@ function setupInv()
 	
 end
 
-function updateInv(newInv)
+function UpdateInv(newInv)
 	invData = newInv
 end
 
-Event.OnClientEvent:Connect(updateInv)
+function ReturnInv()
+	return invData
+end
 
-setupInv()
+Event.OnClientEvent:Connect(UpdateInv)
+
+SetupInv()
