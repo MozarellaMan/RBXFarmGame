@@ -2,7 +2,7 @@
 	<Meta name="ExplicitAutoJoints">true</Meta>
 	<External>null</External>
 	<External>nil</External>
-	<Item class="ScreenGui" referent="RBXE35DD5CB045B409B96BD6C6C8A4E6ED2">
+	<Item class="ScreenGui" referent="RBX0B2B5ED759E84D15A0ED57EF6FBDAA40">
 		<Properties>
 			<BinaryString name="AttributesSerialize"></BinaryString>
 			<bool name="AutoLocalize">true</bool>
@@ -15,7 +15,7 @@
 			<BinaryString name="Tags"></BinaryString>
 			<token name="ZIndexBehavior">0</token>
 		</Properties>
-		<Item class="Frame" referent="RBXE46CDC87B0AE46598BA11819B1E0B69C">
+		<Item class="Frame" referent="RBX029FAE14BC1849D7A6C8959D0AC423A1">
 			<Properties>
 				<bool name="Active">false</bool>
 				<Vector2 name="AnchorPoint">
@@ -67,7 +67,7 @@
 				<bool name="Visible">true</bool>
 				<int name="ZIndex">1</int>
 			</Properties>
-			<Item class="UIGridLayout" referent="RBXF94CA74562964596859A5D4403274220">
+			<Item class="UIGridLayout" referent="RBX5887EE68D376402BBC584BF9A1BF06C4">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<UDim2 name="CellPadding">
@@ -82,8 +82,8 @@
 						<YS>0</YS>
 						<YO>100</YO>
 					</UDim2>
-					<token name="FillDirection">0</token>
-					<int name="FillDirectionMaxCells">0</int>
+					<token name="FillDirection">1</token>
+					<int name="FillDirectionMaxCells">100</int>
 					<token name="HorizontalAlignment">1</token>
 					<string name="Name">UIGridLayout</string>
 					<token name="SortOrder">2</token>

@@ -35,13 +35,15 @@ function InventoryClass:AddItem(Item, Amount)
 		return -1
 	end
 	if not self.Contents[itemName] then -- check if item doesn't already exist in inventory
-		self.Contents[itemName] = {Amount = Amount, Content = Item}
 		self.Size = self.Size + 1
+		self.Contents[itemName] = {Slot = self.Size ,Amount = Amount, Content = Item}
+
 	else
 		local items = ItemModule:GetItems()
 		local newAmount = self.Contents[itemName].Amount + Amount
 		if (self.Contents[itemName].Amount >= items[itemName].MaxAmount) or (newAmount >= items[itemName].MaxAmount) then
 			print("Max amount of this item reached!")
+			self.Contents[itemName].Amount = items[itemName].MaxAmount
 			return -1
 		end
 		self.Contents[itemName].Amount = newAmount -- increment amount of item if it already exists

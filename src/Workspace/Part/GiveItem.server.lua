@@ -6,12 +6,12 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Event = ReplicatedStorage:WaitForChild("DataEvent", 30)
 
 local clickDetect = script.Parent:WaitForChild("ClickDetector", 30)
-local inventory = {}
-local exampleItem = Item:GetItems()["Diamond"]
+local exampleItem = Item:GetItems()["Hot Dog"]
 function giveItem(player)
+	print("clicked!")
 	InventoryModule:GetInventory(player):AddItem(exampleItem, 3)
 
 	Event:FireClient(player, InventoryModule:GetInventory(player):GetContents())
 end
 
-clickDetect.MouseClick:Connect(giveItem)
+clickDetect.MouseClick:Connect(giveItem) --

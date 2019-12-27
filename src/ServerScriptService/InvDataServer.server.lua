@@ -6,6 +6,7 @@ local Event = ReplicatedStorage:WaitForChild("DataEvent", 30)
 local DataStoreService = game:GetService("DataStoreService")
 local inventoryDataStore = DataStoreService:GetDataStore("inventoryDataStore")
 local HttpService = game:GetService("HttpService")
+local hasInventory = false;
 
 function PlayerJoined(player)
 	local data
@@ -16,12 +17,15 @@ function PlayerJoined(player)
 	
 	if success and data ~= nil then
 		InventoryModule:SetInventory(player, InventoryModule:Deserialize(data))
+		hasInventory = true
 		print("Player inventory succcesfully retrieved!")
 		print(data)
 	else
 		local inventory = {}
+			
 		InventoryModule.New(player, inventory, 12, 0)
 		print("There was an error while retrieving your inventory")
+		hasInventory = true
 		warn(errorMessage)
 	end
 end
@@ -42,6 +46,7 @@ function PlayerLeft(player)
 end
 
 function RetrieveInv(player)
+	repeat wait() until hasInventory
 	wait(InventoryModule:GetInventory(player):GetContents())
 	Event:FireClient(player, InventoryModule:GetInventory(player):GetContents())
 end

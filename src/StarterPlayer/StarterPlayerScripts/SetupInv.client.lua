@@ -43,5 +43,8 @@ Event.OnClientEvent:Connect(UpdateInv)
 
 SetupInv()
 
+
+local middle  = Rocrastinate.InspectorMiddleware.createInspectorMiddleware()
+inventoryStore.applyMiddleware(middle)
 inventoryStore.dispatch(Actions.setInventory(ReturnInv()))
 inventoryDisplay.new(inventoryStore, PlayerGui)
