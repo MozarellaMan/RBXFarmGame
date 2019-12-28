@@ -29,9 +29,9 @@ function InventoryDisplay:Redraw( reducedState )
             end
         end
         
-        --print(reducedState.inventory.MaxSize)
+        --print(reducedState.inventory.MaxSi ze)
 
-        for i, item in pairs(reducedState.inventory.Contents) do
+        for i, slot in pairs(reducedState.inventory.Contents) do
             local ItemContainer = Instance.new("Frame")
             ItemContainer.Parent = self.gui.Frame
             ItemContainer.Name = i
@@ -40,14 +40,15 @@ function InventoryDisplay:Redraw( reducedState )
             SlotLabel.Text = i
             SlotLabel.Size = UDim2.new(0,100,0,17)
             SlotLabel.Parent = ItemContainer
-            -- if(i ~= "" or i ~=  nil) then 
-            --     local TextBox = MaterialR:Get("TextButton")
-            --     TextBox.AnchorPoint = Vector2.new(.5, .5)
-            --     TextBox.Size = UDim2.new(0, 100, 0, 100)
-            --     TextBox.Theme = "Light"
-            --     TextBox.Text =  i .. "\nx" .. item.Amount .. "\n" .. item.Content.ItemClass
-            --     TextBox.Parent = self.gui.Frame:WaitForChild("Slot" .. item.Slot)
-            -- end
+            if next(slot) ~= nil then
+                local item = slot[next(slot)]
+                local TextBox = MaterialR:Get("TextButton")
+                TextBox.AnchorPoint = Vector2.new(.5, .5)
+                TextBox.Size = UDim2.new(0, 100, 0, 100)
+                TextBox.Theme = "Light"
+                TextBox.Text =   item.ItemData.Name .. "\nx" .. item.Amount .. "\n" .. item.ItemData.ItemClass
+                TextBox.Parent = self.gui.Frame:WaitForChild(i)
+            end
         end
     end
 end

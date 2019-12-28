@@ -33,7 +33,7 @@ end
 
 function PlayerLeft(player)
 	local success, errorMessage = pcall(function()
-		print(repr(InventoryModule:GetInventory(player), {pretty=true}))
+		--print(repr(InventoryModule:GetInventory(player), {pretty=true}))
 		inventoryDataStore:SetAsync(player.UserId.."-inventory", HttpService:JSONEncode(InventoryModule:GetInventory(player)))
 	end)
 	

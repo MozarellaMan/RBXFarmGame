@@ -21,7 +21,6 @@ function SetupInv()
 	
 	wait(invData)
 
-	print(repr(invData, {pretty=true}))
 	
 	
 end
