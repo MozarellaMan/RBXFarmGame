@@ -16,6 +16,15 @@ function Inventory.New(Player, Table, MaxSize, Size)
 		}, {
 			__index = InventoryClass
 	})
+
+	local count = 1
+
+	while count <= InventoryMeta.MaxSize do
+		InventoryMeta.Contents[count] = {}
+		count = count+1
+		
+	end
+	
 	Inventories[Player] = InventoryMeta -- Add player's inventory to the inventory table
 	return InventoryMeta
 end
@@ -42,6 +51,7 @@ function InventoryClass:AddItem(Item, Amount)
 		local newAmount = self.Contents[itemName].Amount + Amount
 		if (self.Contents[itemName].Amount >= items[itemName].MaxAmount) or (newAmount >= items[itemName].MaxAmount) then
 			print("Max amount of this item reached!")
+
 			self.Contents[itemName].Amount = items[itemName].MaxAmount
 			return -1
 		end

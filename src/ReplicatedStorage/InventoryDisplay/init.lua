@@ -28,30 +28,26 @@ function InventoryDisplay:Redraw( reducedState )
                 instance:Destroy()
             end
         end
-        local count = 0
         
         --print(reducedState.inventory.MaxSize)
-        for i = 1, reducedState.inventory.MaxSize do
-            local ItemContainer = Instance.new("Frame")
-            ItemContainer.Parent = self.gui.Frame
-            ItemContainer.Name = "Slot" .. i
-            local SlotLabel =  Instance.new("TextLabel")
-            SlotLabel.Position = UDim2.new(0,0,-0.17,0)
-            SlotLabel.Text = "Slot" .. i
-            SlotLabel.Size = UDim2.new(0,100,0,17)
-            SlotLabel.Parent = ItemContainer
-            count = count+1
-        end
 
         for i, item in pairs(reducedState.inventory.Contents) do
-            if(i ~= "" or i ~=  nil) then 
-                local TextBox = MaterialR:Get("TextButton")
-                TextBox.AnchorPoint = Vector2.new(.5, .5)
-                TextBox.Size = UDim2.new(0, 100, 0, 100)
-                TextBox.Theme = "Light"
-                TextBox.Text =  i .. "\nx" .. item.Amount .. "\n" .. item.Content.ItemClass
-                TextBox.Parent = self.gui.Frame:WaitForChild("Slot" .. item.Slot)
-            end
+            local ItemContainer = Instance.new("Frame")
+            ItemContainer.Parent = self.gui.Frame
+            ItemContainer.Name = i
+            local SlotLabel =  Instance.new("TextLabel")
+            SlotLabel.Position = UDim2.new(0,0,-0.17,0)
+            SlotLabel.Text = i
+            SlotLabel.Size = UDim2.new(0,100,0,17)
+            SlotLabel.Parent = ItemContainer
+            -- if(i ~= "" or i ~=  nil) then 
+            --     local TextBox = MaterialR:Get("TextButton")
+            --     TextBox.AnchorPoint = Vector2.new(.5, .5)
+            --     TextBox.Size = UDim2.new(0, 100, 0, 100)
+            --     TextBox.Theme = "Light"
+            --     TextBox.Text =  i .. "\nx" .. item.Amount .. "\n" .. item.Content.ItemClass
+            --     TextBox.Parent = self.gui.Frame:WaitForChild("Slot" .. item.Slot)
+            -- end
         end
     end
 end

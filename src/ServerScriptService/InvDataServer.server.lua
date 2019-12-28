@@ -7,6 +7,7 @@ local DataStoreService = game:GetService("DataStoreService")
 local inventoryDataStore = DataStoreService:GetDataStore("inventoryDataStore")
 local HttpService = game:GetService("HttpService")
 local hasInventory = false;
+local repr = require(ReplicatedStorage:WaitForChild("Repr"))
 
 function PlayerJoined(player)
 	local data
@@ -32,7 +33,7 @@ end
 
 function PlayerLeft(player)
 	local success, errorMessage = pcall(function()
-		print(InventoryModule:GetInventory(player))
+		print(repr(InventoryModule:GetInventory(player), {pretty=true}))
 		inventoryDataStore:SetAsync(player.UserId.."-inventory", HttpService:JSONEncode(InventoryModule:GetInventory(player)))
 	end)
 	
