@@ -13,16 +13,18 @@ local inventoryStore = Rocrastinate.createStore(RootReducer.reducer, {}) -- sett
 local PlayerGui = Player:WaitForChild("PlayerGui")
 local inventoryDisplay = require(ReplicatedStorage:WaitForChild("InventoryDisplay"))
 
+
 local invData
 
 function SetupInv()
 	Event:FireServer()
 	
 	wait(invData)
-	
+
+
 	print(Player.Name .. "'s Items:")
 	if invData ~= nil then
-		for i, item in pairs(invData)do
+		for i, item in pairs(invData.Contents)do
 			print("Name:" .. i .. "\nAmount: " .. item.Amount .. "\nType: " .. item.Content.ItemClass)
 		end
 	end
@@ -32,7 +34,6 @@ end
 function UpdateInv(newInv)
 	invData = newInv
 	inventoryStore.dispatch(Actions.setInventory(ReturnInv()))
-
 end
 
 function ReturnInv()

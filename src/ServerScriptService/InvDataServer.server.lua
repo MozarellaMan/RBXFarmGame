@@ -48,7 +48,7 @@ end
 function RetrieveInv(player)
 	repeat wait() until hasInventory
 	wait(InventoryModule:GetInventory(player):GetContents())
-	Event:FireClient(player, InventoryModule:GetInventory(player):GetContents())
+	Event:FireClient(player, InventoryModule:GetInventory(player))
 end
 
 players.PlayerAdded:Connect(PlayerJoined)

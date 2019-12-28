@@ -11,7 +11,7 @@ function giveItem(player)
 	print("clicked!")
 	InventoryModule:GetInventory(player):AddItem(exampleItem, 3)
 
-	Event:FireClient(player, InventoryModule:GetInventory(player):GetContents())
+	Event:FireClient(player, InventoryModule:GetInventory(player))
 end
 
 clickDetect.MouseClick:Connect(giveItem) --
