@@ -20,13 +20,15 @@ function Inventory.New(Player, Table, MaxSize, Size)
 			__index = InventoryClass
 	})
 
-	local count = 1
-	InventoryMeta.Size = 0
-	while count <= InventoryMeta.MaxSize do
-		InventoryMeta.Contents[count] = {}
-		count = count+1
-
+	if next(InventoryMeta.Contents) == nil then
+		local count = 1
+		InventoryMeta.Size = 0
+		while count <= InventoryMeta.MaxSize do
+			InventoryMeta.Contents[count] = {}
+			count = count+1
+		end
 	end
+	
 	
 	Inventories[Player] = InventoryMeta -- Add player's inventory to the inventory table
 	return InventoryMeta
