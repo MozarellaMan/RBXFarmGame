@@ -3,10 +3,12 @@ local Rocrastinate = require(ReplicatedStorage:WaitForChild("Rocrastinate"))
 local InventoryDisplay = Rocrastinate.Component:extend()
 local MaterialR = require(ReplicatedStorage:WaitForChild("MaterialR"))
 local repr = require(ReplicatedStorage:WaitForChild("Repr"))
+local itemSlotGUI = require(ReplicatedStorage:WaitForChild("ItemSlotComp"))
 
 function InventoryDisplay:constructor(store, parent)
     self.store = store
     self.parent = parent
+	self.slots = {}
 end
 
 InventoryDisplay.Reduction = {
@@ -18,37 +20,21 @@ InventoryDisplay.RedrawBinding = "Heartbeat"
 function InventoryDisplay:Redraw( reducedState )
     if not self.gui then
         self.gui = self.maid:GiveTask(script.InventoryTemplate:Clone())
+        self.gui.Frame.BackgroundTransparency = 1
         self.gui.Parent = self.parent
     end
 
     if(reducedState.inventory ~= nil) then
         --print(repr(reducedState.inventory, {pretty=true}))
-        for _, instance in pairs(self.gui.Frame:GetDescendants()) do
-            if instance:IsA("Frame") then
-                instance:Destroy()
-            end
-        end
-        
-        --print(reducedState.inventory.MaxSi ze)
+		for i = 0, #self.slots do
+			if self.slots[i] then
+				self.maid:Cleanup(self.slots[i])
+			end
+		end
 
         for i, slot in pairs(reducedState.inventory.Contents) do
-            local ItemContainer = Instance.new("Frame")
-            ItemContainer.Parent = self.gui.Frame
-            ItemContainer.Name = i
-            local SlotLabel =  Instance.new("TextLabel")
-            SlotLabel.Position = UDim2.new(0,0,-0.17,0)
-            SlotLabel.Text = i
-            SlotLabel.Size = UDim2.new(0,100,0,17)
-            SlotLabel.Parent = ItemContainer
-            if next(slot) ~= nil then
-                local item = slot[next(slot)]
-                local TextBox = MaterialR:Get("TextButton")
-                TextBox.AnchorPoint = Vector2.new(.5, .5)
-                TextBox.Size = UDim2.new(0, 100, 0, 100)
-                TextBox.Theme = "Light"
-                TextBox.Text =   item.ItemData.Name .. "\nx" .. item.Amount .. "\n" .. item.ItemData.ItemClass
-                TextBox.Parent = self.gui.Frame:WaitForChild(i)
-            end
+			local slot = self.maid:GiveTask(itemSlotGUI.new(self.gui.Frame, {index = i, item = slot}))
+			self.slots[i] = slot
         end
     end
 end

@@ -84,7 +84,6 @@ function InventoryClass:AddItem(Item, Amount)
 			end 
 			targetSlot[itemName].Amount = newAmount
 		end
-		print(repr(self.Contents, {pretty=true}))
 	end
 
 	-- check if inventory is full

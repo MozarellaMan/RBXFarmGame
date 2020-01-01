@@ -1,0 +1,3 @@
+return {
+	CurrentValue = "Dark"
+}
