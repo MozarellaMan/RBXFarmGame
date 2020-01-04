@@ -3,6 +3,9 @@ local Rocrastinate = require(ReplicatedStorage:WaitForChild("Rocrastinate"))
 local repr = require(ReplicatedStorage:WaitForChild("Repr"))
 local SectionsString = require(ReplicatedStorage.SectionsTextLableModule)
 local TweenService = game:GetService("TweenService")
+local UserInputService = game:GetService("UserInputService")
+local InvSlotClickEvent = ReplicatedStorage.BindableEvents:WaitForChild("InvSlotClicked")
+local Player = game.Players.LocalPlayer
 
 local tweenInfo = TweenInfo.new(
 	0.1, -- Time
@@ -35,26 +38,22 @@ function ItemSlotComp:constructor(parent, props)
 		self.Type = item.ItemData.ItemClass
 	end
 	self.selected = false;
-	self.onClick = function() print(self.ItemName .. " clicked!") end
+	self.onClick = (function() 
+		InvSlotClickEvent:Fire(self.indexLabel)
+		self.queueRedraw()
+	end)
 	
-	
+	self.hovered = false
 	self.onHover = (function() 
-			self.selected = true 
+			self.hovered = true 
 			self.queueRedraw()
 	end)
 	
 	self.onHoverEnd = (function () 
-		self.selected = false
+		self.hovered = false
 		self.queueRedraw()
 	end)
 	
-	self.handleInput = (function(input)
-		if input.UserInputType == Enum.UserInputType.Keyboard then
-			local keyPressed = input.KeyCode
-			print("A key is being pushed down! Key:",input.KeyCode)
-		end
-		self.queueRedraw()
-	end)
 end
 
 ItemSlotComp.RedrawBinding = "Heartbeat"
@@ -63,6 +62,8 @@ function ItemSlotComp:Redraw()
 	if not self.gui then
 		self.gui = script.ItemSlotTemplate:Clone()
 		self.gui.LayoutOrder = self.index
+		
+		
 	  	self.slotLabel =  Instance.new("TextLabel", self.gui)
         self.slotLabel.Position = UDim2.new(0,0,-0.17,0)
         self.slotLabel.Size = UDim2.new(0,100,0,17)
@@ -79,8 +80,7 @@ function ItemSlotComp:Redraw()
 			self.gui.MouseEnter:Connect(function () self.onHover() end),
 			self.gui.SelectionGained:Connect(function () self.onHover() end),
 			self.gui.MouseLeave:Connect(function () self.onHoverEnd() end),
-			self.gui.SelectionLost:Connect(function () self.onHoverEnd() end),
-			self.gui.InputBegan:Connect(function(input) self.handleInput(input) end)
+			self.gui.SelectionLost:Connect(function () self.onHoverEnd() end)
 		)
 		
 		self.gui.Parent = self.parent
@@ -102,7 +102,7 @@ function ItemSlotComp:Redraw()
 		
 	end
 	
-	local active = self.selected
+	local active = self.selected or self.hovered
 	if self.renderActive ~= active then
 		self.renderActive = active
 		if active then
@@ -119,9 +119,22 @@ function ItemSlotComp:Redraw()
 			):Play()
 		end
 	end
-	
 end
- 
+
+function ItemSlotComp:SetSelected(selected)
+	if selected ~= self.selected then
+		self.selected = selected
+		self.queueRedraw()
+	end
+end
+
+function ItemSlotComp:GetLabel()
+	return self.indexLabel
+end
+
+function ItemSlotComp:IsSelected()
+	return self.selected
+end
 
 
 return ItemSlotComp
