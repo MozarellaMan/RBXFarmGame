@@ -19,9 +19,12 @@ InventoryDisplay.RedrawBinding = "Heartbeat"
 
 function InventoryDisplay:Redraw( reducedState )
     if not self.gui then
-        self.gui = self.maid:GiveTask(script.InventoryTemplate:Clone())
+		self.gui = script.InventoryTemplate:Clone()
         self.gui.Frame.BackgroundTransparency = 1
         self.gui.Parent = self.parent
+		self.maid:GiveTask(
+			self.gui
+		)
     end
 
     if(reducedState.inventory ~= nil) then

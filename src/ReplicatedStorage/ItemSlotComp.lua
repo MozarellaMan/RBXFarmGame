@@ -2,6 +2,16 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Rocrastinate = require(ReplicatedStorage:WaitForChild("Rocrastinate"))
 local repr = require(ReplicatedStorage:WaitForChild("Repr"))
 local SectionsString = require(ReplicatedStorage.SectionsTextLableModule)
+local TweenService = game:GetService("TweenService")
+
+local tweenInfo = TweenInfo.new(
+	0.1, -- Time
+	Enum.EasingStyle.Linear, -- EasingStyle
+	Enum.EasingDirection.Out, -- EasingDirection
+	0, -- RepeatCount (when less than zero the tween will loop indefinitely)
+	false, -- Reverses (tween will reverse once reaching it's goal)
+	0 -- DelayTime
+)
 
 local ItemSlotComp = Rocrastinate.Component:extend()
 
@@ -15,7 +25,7 @@ function ItemSlotComp:constructor(parent, props)
 	local keys = {"0","-","="}
 	if(self.index >=10 and self.index <= 12) then
 		local index = self.index
-		self.indexLabel = keys[(((index - 10) * (3 - 1)) / (12 - 10)) + 1]
+		self.indexLabel = keys[(((index - 10) * (3 - 1)) / (12 - 10)) + 1] -- show 0 to = sign on hotbar
 	end
 	if(next(props.item) ~= nil) then
 		local item = props.item[next(props.item)]
@@ -24,7 +34,27 @@ function ItemSlotComp:constructor(parent, props)
 		self.ItemName = item.ItemData.Name
 		self.Type = item.ItemData.ItemClass
 	end
+	self.selected = false;
 	self.onClick = function() print(self.ItemName .. " clicked!") end
+	
+	
+	self.onHover = (function() 
+			self.selected = true 
+			self.queueRedraw()
+	end)
+	
+	self.onHoverEnd = (function () 
+		self.selected = false
+		self.queueRedraw()
+	end)
+	
+	self.handleInput = (function(input)
+		if input.UserInputType == Enum.UserInputType.Keyboard then
+			local keyPressed = input.KeyCode
+			print("A key is being pushed down! Key:",input.KeyCode)
+		end
+		self.queueRedraw()
+	end)
 end
 
 ItemSlotComp.RedrawBinding = "Heartbeat"
@@ -40,29 +70,58 @@ function ItemSlotComp:Redraw()
 		self.slotLabel.TextColor3 = Color3.new(255,255,255)
 		self.slotLabel.TextStrokeTransparency = 0
 		self.slotLabel.Text = self.indexLabel
-		
-		print(repr(self.props))
+
 		self.maid:GiveTask(
 			self.gui,
 			self.slotLabel,
-			self.gui.MouseButton1Click:Connect(function() self.onClick() end)	
+			SectionsString.SetTextLable(self.gui.ItemInfo),
+			self.gui.MouseButton1Click:Connect(function() self.onClick() end),
+			self.gui.MouseEnter:Connect(function () self.onHover() end),
+			self.gui.SelectionGained:Connect(function () self.onHover() end),
+			self.gui.MouseLeave:Connect(function () self.onHoverEnd() end),
+			self.gui.SelectionLost:Connect(function () self.onHoverEnd() end),
+			self.gui.InputBegan:Connect(function(input) self.handleInput(input) end)
 		)
 		
 		self.gui.Parent = self.parent
 		--print(self.gui.Parent)
+	end
+	for k,v in pairs(self.gui.ItemInfo:GetChildren()) do
+		if(v:IsA("TextLabel")) then
+			self.maid:Cleanup(v)
+		end
 	end
 	
 	if self.isEmpty then
 		self.gui.ItemInfo.Text = ""
 	else
 		local label = self.gui.ItemInfo
-		SectionsString.SetTextLable(label)
 		label.Text = SectionsString.new(label, {Text = self.ItemName})
 			.. SectionsString.new(label, {Text = "x" .. self.Amount, Font = "SourceSansLight"})
 			.. SectionsString.new(label, {Text = self.Type, TextColor3 = Color3.fromRGB(255,129,19)})
+		
 	end
+	
+	local active = self.selected
+	if self.renderActive ~= active then
+		self.renderActive = active
+		if active then
+			TweenService:Create(
+				self.gui,
+				tweenInfo,
+				{BorderColor3 = Color3.fromRGB(255,87,21)}
+			):Play()
+		else
+			TweenService:Create(
+				self.gui,
+				tweenInfo,
+				{BorderColor3 = Color3.fromRGB(131,66,13)}
+			):Play()
+		end
+	end
+	
 end
-
+ 
 
 
 return ItemSlotComp

@@ -11,6 +11,7 @@
 local module = {}
 local LableTable = {}
 function module.SetTextLable(Lable)
+	
 	LableTable[Lable] = {
 		Index = 0;
 		TextTransparency = Lable.TextTransparency;
@@ -49,6 +50,7 @@ function module.SetTextLable(Lable)
 	Lable.TextTransparency = 1
 end
 function module.new(Lable,Properties)
+	
 	if LableTable[Lable] ~= nil then
 		if Properties.Text == nil then
 			warn(Lable.Name .. ".Text is can't be nil")
