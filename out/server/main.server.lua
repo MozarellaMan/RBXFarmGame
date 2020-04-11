@@ -1,6 +1,13 @@
 -- Compiled with https://roblox-ts.github.io v0.3.1
--- April 9, 2020, 4:29 PM British Summer Time
+-- April 11, 2020, 10:51 PM British Summer Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
-local makeHello = TS.import(script, game:GetService("ReplicatedStorage"), "TS", "module").makeHello;
-print(makeHello("main.server.ts"));
+local Players = TS.import(script, TS.getModule(script, "services")).Players;
+local Inventory = TS.import(script, game:GetService("ReplicatedStorage"), "TS", "inventory").Inventory;
+local Items = TS.import(script, game:GetService("ReplicatedStorage"), "TS", "item").Items;
+Players.PlayerAdded:Connect(function(player)
+	print(player.AccountAge, player.Name, player.CameraMode);
+	local newInv = Inventory.new(player);
+	newInv:addItem(Items[3]);
+	print(newInv.owner.Name, TS.array_toString(newInv.contents));
+end);
