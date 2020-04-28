@@ -20,6 +20,7 @@
     "prettier": "^2.0.5"
   },
   "dependencies": {
+    "@rbxts/net": "^1.2.6",
     "@rbxts/services": "^1.0.4"
   }
 }

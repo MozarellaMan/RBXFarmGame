@@ -1,9 +1,9 @@
 -- Compiled with https://roblox-ts.github.io v0.3.2
--- April 28, 2020, 3:07 PM British Summer Time
+-- April 28, 2020, 5:46 PM British Summer Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local exports = {};
-local InventorySlot = TS.import(script, game:GetService("ReplicatedStorage"), "TS", "invSlot").InventorySlot;
+local InventorySlot = TS.import(script, game:GetService("ReplicatedStorage"), "TS", "inventory", "invSlot").InventorySlot;
 local Inventory;
 do
 	Inventory = setmetatable({}, {
