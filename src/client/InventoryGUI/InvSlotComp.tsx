@@ -6,8 +6,8 @@ interface InvSlotState {
   selected: boolean
 }
 
-export class InvSlot extends Roact.Component<{ itemName: string; amount: number }, InvSlotState> {
-  constructor(props: { itemName: string; amount: number }) {
+export class InvSlot extends Roact.PureComponent<{ itemName: string; amount: number; order: number }, InvSlotState> {
+  constructor(props: { itemName: string; amount: number; order: number }) {
     super(props)
     this.setState({
       active: true,
@@ -19,7 +19,7 @@ export class InvSlot extends Roact.Component<{ itemName: string; amount: number 
     const { active, selected } = this.state
 
     return (
-      <frame Size={new UDim2(0, 50, 0, 50)}>
+      <frame LayoutOrder={this.props.order} Size={new UDim2(0, 50, 0, 50)}>
         <textbutton
           Key="TimeLabel"
           Size={new UDim2(1, 0, 1, 0)}

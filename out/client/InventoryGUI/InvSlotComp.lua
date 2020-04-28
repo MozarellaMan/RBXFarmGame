@@ -1,12 +1,12 @@
 -- Compiled with https://roblox-ts.github.io v0.3.2
--- April 28, 2020, 8:14 PM British Summer Time
+-- April 28, 2020, 8:22 PM British Summer Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local exports = {};
 local Roact = TS.import(script, TS.getModule(script, "roact").roact.src);
 local InvSlot;
 do
-	InvSlot = Roact.Component:extend("InvSlot");
+	InvSlot = Roact.PureComponent:extend("InvSlot");
 	function InvSlot:init(props)
 		self:setState({
 			active = true;

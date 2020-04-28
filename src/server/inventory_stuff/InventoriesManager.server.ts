@@ -4,15 +4,16 @@ import Net from "@rbxts/net"
 import { ItemIndex, Item } from "shared/inventory/item"
 
 const Inventories = new Map<Player, Inventory>()
+const inventoryChanged = Net.CreateEvent("inventoryChanged")
+const addItemToPlayer = Net.CreateEvent("addItemToPlayer")
+const getPlayerInventory = Net.CreateFunction("getPlayerInventory")
 
 Players.PlayerAdded.Connect((player) => {
   print(player.AccountAge, player.Name, player.CameraMode)
   const newInv = new Inventory(player)
   Inventories.set(player, newInv)
+  inventoryChanged.SendToPlayer(player)
 })
-
-const addItemToPlayer = Net.CreateEvent("addItemToPlayer")
-const getPlayerInventory = Net.CreateFunction("getPlayerInventory")
 
 addItemToPlayer.Connect((player, ...args: Array<unknown>) => {
   print(player, args.toString())
@@ -24,7 +25,7 @@ addItemToPlayer.Connect((player, ...args: Array<unknown>) => {
   const inventoryToAffect = Inventories.get(player)
 
   if (itemToAdd && inventoryToAffect) inventoryToAffect.addItem(itemToAdd, amount)
-  print(Inventories.toString())
+  inventoryChanged.SendToPlayer(player)
 })
 
 getPlayerInventory.SetCallback((player) => {

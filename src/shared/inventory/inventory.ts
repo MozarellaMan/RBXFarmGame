@@ -33,7 +33,5 @@ export class Inventory {
     if (!itemExists) {
       this.contents = this.contents.map((slot, index) => (index !== emptySlotIndex ? slot : slot.addItem(item, amount)))
     }
-
-    print(this.contents.toString())
   }
 }

@@ -1,11 +1,12 @@
 -- Compiled with https://roblox-ts.github.io v0.3.2
--- April 28, 2020, 8:17 PM British Summer Time
+-- April 28, 2020, 9:11 PM British Summer Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local Roact = TS.import(script, TS.getModule(script, "roact").roact.src);
 local InvSlot = TS.import(script, script.Parent, "InvSlotComp").InvSlot;
 local Net = TS.import(script, TS.getModule(script, "net").out);
 local Players = game:GetService("Players");
+local handle;
 local InventoryGui = function(props)
 	local contents = props.contents;
 	return Roact.createElement(
@@ -24,6 +25,7 @@ local InventoryGui = function(props)
 							"UIGridLayout",
 							{
 								FillDirection = Enum.FillDirection.Vertical,
+								SortOrder = Enum.SortOrder.LayoutOrder,
 							}
 						),
 					},
@@ -31,6 +33,7 @@ local InventoryGui = function(props)
 						return Roact.createFragment({ [i] = Roact.createElement(
 							InvSlot,
 							{
+								order = i,
 								itemName = slot.currentItem.name,
 								amount = slot.size,
 							}
@@ -42,17 +45,24 @@ local InventoryGui = function(props)
 	);
 end;
 local PlayerGui = Players.LocalPlayer:FindFirstChildOfClass("PlayerGui");
-local getInventory = Net.WaitForClientFunctionAsync("getPlayerInventory"):andThen(function(result)
-	local response = result:CallServerAsync(Players.LocalPlayer):andThen(function(inv)
-		local invContents = inv.contents;
-		local inventoryElement = Roact.createElement(
-			InventoryGui,
-			{
-				contents = invContents,
-			}
-		);
-		local handle = Roact.mount(inventoryElement, PlayerGui, "Inventory");
-	end):catch(function(excep)
-		return print(excep);
+local updateInventory = Net.WaitForClientEventAsync("inventoryChanged"):andThen(function(event)
+	event:Connect(function()
+		local getInventory = Net.WaitForClientFunctionAsync("getPlayerInventory"):andThen(function(result)
+			local response = result:CallServerAsync(Players.LocalPlayer):andThen(function(inv)
+				local invContents = inv.contents;
+				local inventoryElement = Roact.createElement(
+					InventoryGui,
+					{
+						contents = invContents,
+					}
+				);
+				if handle then
+					Roact.unmount(handle);
+				end;
+				handle = Roact.mount(inventoryElement, PlayerGui, "Inventory");
+			end):catch(function(excep)
+				return print(excep);
+			end);
+		end);
 	end);
 end);

@@ -1,5 +1,5 @@
 -- Compiled with https://roblox-ts.github.io v0.3.2
--- April 28, 2020, 7:50 PM British Summer Time
+-- April 28, 2020, 8:32 PM British Summer Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local Players = TS.import(script, TS.getModule(script, "services")).Players;
@@ -7,13 +7,15 @@ local Inventory = TS.import(script, game:GetService("ReplicatedStorage"), "TS", 
 local Net = TS.import(script, TS.getModule(script, "net").out);
 local ItemIndex = TS.import(script, game:GetService("ReplicatedStorage"), "TS", "inventory", "item").ItemIndex;
 local Inventories = {};
+local inventoryChanged = Net.CreateEvent("inventoryChanged");
+local addItemToPlayer = Net.CreateEvent("addItemToPlayer");
+local getPlayerInventory = Net.CreateFunction("getPlayerInventory");
 Players.PlayerAdded:Connect(function(player)
 	print(player.AccountAge, player.Name, player.CameraMode);
 	local newInv = Inventory.new(player);
 	Inventories[player] = newInv;
+	inventoryChanged:SendToPlayer(player);
 end);
-local addItemToPlayer = Net.CreateEvent("addItemToPlayer");
-local getPlayerInventory = Net.CreateFunction("getPlayerInventory");
 addItemToPlayer:Connect(function(player, ...)
 	local args = { ... };
 	print(player, TS.array_toString(args));
@@ -24,7 +26,7 @@ addItemToPlayer:Connect(function(player, ...)
 	if itemToAdd and inventoryToAffect then
 		inventoryToAffect:addItem(itemToAdd, amount);
 	end;
-	print(TS.map_toString(Inventories));
+	inventoryChanged:SendToPlayer(player);
 end);
 getPlayerInventory:SetCallback(function(player)
 	return Inventories[player];
