@@ -1,5 +1,5 @@
 -- Compiled with https://roblox-ts.github.io v0.3.2
--- April 28, 2020, 2:29 PM British Summer Time
+-- April 28, 2020, 3:02 PM British Summer Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local exports = {};
@@ -21,9 +21,11 @@ do
 		self.size = 0;
 		self.contents = table.create(self.maxSize, InventorySlot.new());
 	end;
-	function Inventory:addItem(item)
+	function Inventory:addItem(item, amount)
+		if amount == nil then amount = 1; end;
 		local itemExists = (table.find(TS.array_map(TS.array_filter(self.contents, function(slot)
-			return not (slot:isEmpty());
+			local _0 = not (slot:isEmpty());
+			return _0 and not (slot:isFull());
 		end), function(slot)
 			return slot.currentItem;
 		end), item) ~= nil);
@@ -41,7 +43,7 @@ do
 					if index ~= existingItemSlot then
 						return slot;
 					else
-						return slot:addItem(item);
+						return slot:addItem(item, amount);
 					end;
 				end);
 			else
@@ -52,7 +54,7 @@ do
 				if index ~= emptySlotIndex then
 					return slot;
 				else
-					return slot:addItem(item);
+					return slot:addItem(item, amount);
 				end;
 			end);
 		end;
