@@ -1,3 +1,4 @@
+/* eslint-disable roblox-ts/lua-truthiness */
 import { Players } from "@rbxts/services"
 import { Item } from "shared/inventory/item"
 import { InventorySlot } from "shared/inventory/invSlot"

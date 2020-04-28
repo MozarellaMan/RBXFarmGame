@@ -1,5 +1,5 @@
 -- Compiled with https://roblox-ts.github.io v0.3.2
--- April 28, 2020, 5:46 PM British Summer Time
+-- April 28, 2020, 7:50 PM British Summer Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local Players = TS.import(script, TS.getModule(script, "services")).Players;
@@ -13,6 +13,7 @@ Players.PlayerAdded:Connect(function(player)
 	Inventories[player] = newInv;
 end);
 local addItemToPlayer = Net.CreateEvent("addItemToPlayer");
+local getPlayerInventory = Net.CreateFunction("getPlayerInventory");
 addItemToPlayer:Connect(function(player, ...)
 	local args = { ... };
 	print(player, TS.array_toString(args));
@@ -24,4 +25,7 @@ addItemToPlayer:Connect(function(player, ...)
 		inventoryToAffect:addItem(itemToAdd, amount);
 	end;
 	print(TS.map_toString(Inventories));
+end);
+getPlayerInventory:SetCallback(function(player)
+	return Inventories[player];
 end);

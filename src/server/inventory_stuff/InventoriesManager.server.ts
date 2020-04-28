@@ -12,6 +12,7 @@ Players.PlayerAdded.Connect((player) => {
 })
 
 const addItemToPlayer = Net.CreateEvent("addItemToPlayer")
+const getPlayerInventory = Net.CreateFunction("getPlayerInventory")
 
 addItemToPlayer.Connect((player, ...args: Array<unknown>) => {
   print(player, args.toString())
@@ -24,4 +25,8 @@ addItemToPlayer.Connect((player, ...args: Array<unknown>) => {
 
   if (itemToAdd && inventoryToAffect) inventoryToAffect.addItem(itemToAdd, amount)
   print(Inventories.toString())
+})
+
+getPlayerInventory.SetCallback((player) => {
+  return Inventories.get(player)
 })
