@@ -1,5 +1,5 @@
 -- Compiled with https://roblox-ts.github.io v0.3.2
--- April 28, 2020, 3:02 PM British Summer Time
+-- April 28, 2020, 3:07 PM British Summer Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local exports = {};
@@ -58,6 +58,7 @@ do
 				end;
 			end);
 		end;
+		print(TS.array_toString(self.contents));
 	end;
 end;
 exports.Inventory = Inventory;

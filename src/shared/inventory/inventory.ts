@@ -1,6 +1,6 @@
 import { Players } from "@rbxts/services"
-import { Item } from "shared/item"
-import { InventorySlot } from "shared/invSlot"
+import { Item } from "shared/inventory/item"
+import { InventorySlot } from "shared/inventory/invSlot"
 
 export class Inventory {
   owner: Player
@@ -32,5 +32,7 @@ export class Inventory {
     if (!itemExists) {
       this.contents = this.contents.map((slot, index) => (index !== emptySlotIndex ? slot : slot.addItem(item, amount)))
     }
+
+    print(this.contents.toString())
   }
 }

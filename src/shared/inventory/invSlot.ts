@@ -1,4 +1,4 @@
-import { Item, Items, Empty } from "shared/item"
+import { Item, Items, Empty } from "shared/inventory/item"
 
 type stateType = "empty" | "full" | "occupied"
 
