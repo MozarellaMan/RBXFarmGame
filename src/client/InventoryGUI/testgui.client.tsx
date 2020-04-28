@@ -11,8 +11,10 @@ const InventoryGui = (props: { contents: Array<InventorySlot> }) => {
   return (
     <screengui>
       <frame Position={new UDim2(0.1, 0, 0.9, -60)} Size={new UDim2(0, 1000, 0, 0)}>
-        <uigridlayout />
-        <InvSlot itemName="Bread" amount={0} />
+        <uigridlayout FillDirection={Enum.FillDirection.Vertical} />
+        {contents.map((slot, i) => {
+          return <InvSlot Key={i} itemName={slot.currentItem.name} amount={slot.size} />
+        })}
       </frame>
     </screengui>
   )
@@ -23,7 +25,11 @@ const getInventory = Net.WaitForClientFunctionAsync("getPlayerInventory").then((
   const response = result
     .CallServerAsync(Players.LocalPlayer)
     .then((inv: Inventory) => {
-      print(inv.contents.toString())
+      const invContents = inv.contents
+
+      const inventoryElement = <InventoryGui contents={invContents} />
+
+      const handle = Roact.mount(inventoryElement, PlayerGui, "Inventory")
     })
     .catch((excep: unknown) => print(excep))
 })

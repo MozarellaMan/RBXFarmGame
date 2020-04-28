@@ -1,5 +1,5 @@
 -- Compiled with https://roblox-ts.github.io v0.3.2
--- April 28, 2020, 7:38 PM British Summer Time
+-- April 28, 2020, 8:14 PM British Summer Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local exports = {};
@@ -20,11 +20,11 @@ do
 		return Roact.createElement(
 			"Frame",
 			{
-				Size = UDim2.new(0, 100, 0, 100),
+				Size = UDim2.new(0, 50, 0, 50),
 			},
 			{
 				["TimeLabel"] = Roact.createElement(
-					"TextLabel",
+					"TextButton",
 					{
 						Size = UDim2.new(1, 0, 1, 0),
 						Text = self.props.itemName .. " \n " .. tostring(self.props.amount),

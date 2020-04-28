@@ -19,8 +19,8 @@ export class InvSlot extends Roact.Component<{ itemName: string; amount: number 
     const { active, selected } = this.state
 
     return (
-      <frame Size={new UDim2(0, 100, 0, 100)}>
-        <textlabel
+      <frame Size={new UDim2(0, 50, 0, 50)}>
+        <textbutton
           Key="TimeLabel"
           Size={new UDim2(1, 0, 1, 0)}
           Text={`${this.props.itemName} \n ${this.props.amount}`}
