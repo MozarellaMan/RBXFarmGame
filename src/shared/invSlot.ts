@@ -28,11 +28,11 @@ export class InventorySlot {
                 const changedSize = (this.size+amount) < item.maxAmount ? this.size+amount : item.maxAmount
                 return new InventorySlot(item, changedSize)
             case "occupied":
-                const newSize = this.size+amount
+                const maxItemAmount = this.currentItem.maxAmount
+                const sumSize = this.size+amount
                 const itemsMatch = item === this.currentItem
-                this.size = itemsMatch && newSize < this.currentItem.maxAmount ? newSize : this.currentItem.maxAmount
-                this.checkState()
-                return Object.copy(this)
+                const newSize = itemsMatch && sumSize < this.currentItem.maxAmount ? sumSize : maxItemAmount
+                return new InventorySlot(this.currentItem,newSize, this.size === maxItemAmount ? 'full' : 'occupied' )
             case "full":
                 return Object.copy(this)
                 
@@ -47,5 +47,9 @@ export class InventorySlot {
 
     isEmpty(){
         return this.state === 'empty'
+    }
+
+    isFull(){
+        return this.state === 'full'
     }
 }

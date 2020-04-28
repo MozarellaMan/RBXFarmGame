@@ -1,5 +1,5 @@
--- Compiled with https://roblox-ts.github.io v0.3.1
--- April 11, 2020, 10:51 PM British Summer Time
+-- Compiled with https://roblox-ts.github.io v0.3.2
+-- April 28, 2020, 2:29 PM British Summer Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local exports = {};
@@ -50,15 +50,23 @@ do
 				return InventorySlot.new(item, changedSize);
 			end;
 			if _0 == "occupied" then
-				local newSize = self.size + amount;
+				local maxItemAmount = self.currentItem.maxAmount;
+				local sumSize = self.size + amount;
 				local itemsMatch = item == self.currentItem;
-				if itemsMatch and (newSize < self.currentItem.maxAmount) then
-					self.size = newSize;
+				local newSize;
+				if itemsMatch and (sumSize < self.currentItem.maxAmount) then
+					newSize = sumSize;
 				else
-					self.size = self.currentItem.maxAmount;
+					newSize = maxItemAmount;
 				end;
-				self:checkState();
-				return TS.Object_copy(self);
+				local _2 = self.currentItem;
+				local _1;
+				if self.size == maxItemAmount then
+					_1 = 'full';
+				else
+					_1 = 'occupied';
+				end;
+				return InventorySlot.new(_2, newSize, _1);
 			end;
 			if _0 == "full" then
 				return TS.Object_copy(self);
@@ -78,6 +86,9 @@ do
 	end;
 	function InventorySlot:isEmpty()
 		return self.state == 'empty';
+	end;
+	function InventorySlot:isFull()
+		return self.state == 'full';
 	end;
 end;
 exports.InventorySlot = InventorySlot;

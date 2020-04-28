@@ -1,5 +1,5 @@
--- Compiled with https://roblox-ts.github.io v0.3.1
--- April 11, 2020, 10:51 PM British Summer Time
+-- Compiled with https://roblox-ts.github.io v0.3.2
+-- April 28, 2020, 2:29 PM British Summer Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local exports = {};
@@ -30,13 +30,32 @@ do
 		local emptySlotIndex = TS.array_findIndex(self.contents, function(slot)
 			return slot:isEmpty();
 		end);
-		self.contents = TS.array_map(self.contents, function(slot, index)
-			if index ~= emptySlotIndex then
-				return slot;
+		if itemExists then
+			local existingItemSlot = TS.array_findIndex(self.contents, function(slot)
+				local _0 = slot.currentItem == item;
+				return _0 and not (slot:isFull());
+			end);
+			local _0 = existingItemSlot + 1;
+			if _0 ~= 0 and _0 == _0 and _0 then
+				self.contents = TS.array_map(self.contents, function(slot, index)
+					if index ~= existingItemSlot then
+						return slot;
+					else
+						return slot:addItem(item);
+					end;
+				end);
 			else
-				return slot:addItem(item);
 			end;
-		end);
+		end;
+		if not (itemExists) then
+			self.contents = TS.array_map(self.contents, function(slot, index)
+				if index ~= emptySlotIndex then
+					return slot;
+				else
+					return slot:addItem(item);
+				end;
+			end);
+		end;
 	end;
 end;
 exports.Inventory = Inventory;
