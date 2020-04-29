@@ -1,5 +1,5 @@
 -- Compiled with https://roblox-ts.github.io v0.3.2
--- April 28, 2020, 10:44 PM British Summer Time
+-- April 29, 2020, 9:14 PM British Summer Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local Roact = TS.import(script, TS.getModule(script, "roact").roact.src);
@@ -17,13 +17,16 @@ local InventoryGui = function(props)
 				"Frame",
 				{
 					Position = UDim2.new(0.1, 0, 0.9, -60),
-					Size = UDim2.new(0, 1000, 0, 0),
+					Size = UDim2.new(0, 1000, 0, 50),
+					BackgroundTransparency = 1,
 				},
 				TS.Roact_combine(
 					{
 						Roact.createElement(
 							"UIGridLayout",
 							{
+								CellSize = UDim2.new(0, 90, 0, 90),
+								CellPadding = UDim2.new(0, 10, 0, 0),
 								FillDirection = Enum.FillDirection.Vertical,
 								SortOrder = Enum.SortOrder.LayoutOrder,
 							}

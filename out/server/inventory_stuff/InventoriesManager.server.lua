@@ -1,5 +1,5 @@
 -- Compiled with https://roblox-ts.github.io v0.3.2
--- April 28, 2020, 10:29 PM British Summer Time
+-- April 29, 2020, 9:15 PM British Summer Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local Players = TS.import(script, TS.getModule(script, "services")).Players;
@@ -9,6 +9,7 @@ local ItemIndex = TS.import(script, game:GetService("ReplicatedStorage"), "TS", 
 local Inventories = {};
 local inventoryChanged = Net.CreateEvent("inventoryChanged");
 local addItemToPlayer = Net.CreateEvent("addItemToPlayer");
+local removeItemFromPlayer = Net.CreateEvent("removeItemFromPlayer");
 local getPlayerInventory = Net.CreateFunction("getPlayerInventory");
 Players.PlayerAdded:Connect(function(player)
 	print(player.AccountAge, player.Name, player.CameraMode);
@@ -24,9 +25,22 @@ addItemToPlayer:Connect(function(player, ...)
 	local itemToAdd = ItemIndex[itemID];
 	local inventoryToAffect = Inventories[player];
 	if itemToAdd and inventoryToAffect then
-		inventoryToAffect:addItem(itemToAdd, amount);
+		inventoryToAffect:addItem(itemToAdd, amount):andThen(inventoryChanged:SendToPlayer(player)):catch(function(excep)
+			return print(excep);
+		end);
 	end;
-	inventoryChanged:SendToPlayer(player);
+end);
+removeItemFromPlayer:Connect(function(player, ...)
+	local args = { ... };
+	local itemID = args[1];
+	local amount = args[2];
+	local itemToRemove = ItemIndex[itemID];
+	local inventoryToAffect = Inventories[player];
+	if itemToRemove and inventoryToAffect then
+		inventoryToAffect:takeItem(itemToRemove, amount):andThen(inventoryChanged:SendToPlayer(player)):catch(function(excep)
+			return print(excep);
+		end);
+	end;
 end);
 getPlayerInventory:SetCallback(function(player)
 	return Inventories[player];

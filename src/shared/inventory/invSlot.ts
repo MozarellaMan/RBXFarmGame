@@ -35,11 +35,26 @@ export class InventorySlot {
     }
   }
 
+  removeItem(item: Item, amount = 1): InventorySlot {
+    switch (this.state) {
+      case "empty":
+        return this.makeEmpty()
+      case "full":
+      case "occupied":
+        const changedSize = this.size - amount > 0 ? this.size - amount : 0
+        return changedSize > 0 ? new InventorySlot(item, changedSize, "occupied") : this.makeEmpty()
+    }
+  }
+
   isEmpty() {
     return this.state === "empty"
   }
 
   isFull() {
     return this.state === "full"
+  }
+
+  makeEmpty() {
+    return new InventorySlot(Empty, 0, "empty")
   }
 }

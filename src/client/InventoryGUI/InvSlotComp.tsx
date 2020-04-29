@@ -7,6 +7,11 @@ interface InvSlotState {
   hovered: boolean
 }
 
+const backgroundColour = Color3.fromRGB(240, 189, 108)
+const borderColour = Color3.fromRGB(102, 63, 0)
+const selectedBorderColour = Color3.fromRGB(252, 86, 3)
+const hoveredBorderColour = Color3.fromRGB(176, 91, 0)
+
 export class InvSlot extends Roact.PureComponent<{ itemName: string; amount: number; order: number }, InvSlotState> {
   constructor(props: { itemName: string; amount: number; order: number }) {
     super(props)
@@ -20,6 +25,9 @@ export class InvSlot extends Roact.PureComponent<{ itemName: string; amount: num
   public render(): Roact.Element {
     const { active, selected, hovered } = this.state
 
+    const clickBorder = selected ? selectedBorderColour : borderColour
+    const hoveredBorder = hovered ? hoveredBorderColour : borderColour
+
     return (
       <frame LayoutOrder={this.props.order} Size={new UDim2(0, 50, 0, 50)}>
         <textbutton
@@ -29,8 +37,12 @@ export class InvSlot extends Roact.PureComponent<{ itemName: string; amount: num
           Event={{
             MouseEnter: (rbx) => this.setState({ hovered: true }),
             MouseLeave: (rbx) => this.setState({ hovered: false }),
+            MouseButton1Down: (rbx) => this.setState({ selected: !selected }),
           }}
-          BorderSizePixel={hovered ? 5 : 1}
+          BorderSizePixel={hovered ? 5 : 3}
+          BorderColor3={clickBorder}
+          BackgroundColor3={backgroundColour}
+          AutoButtonColor={false}
         />
       </frame>
     )

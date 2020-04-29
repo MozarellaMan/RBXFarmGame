@@ -12,8 +12,13 @@ const InventoryGui = (props: { contents: Array<InventorySlot> }) => {
 
   return (
     <screengui>
-      <frame Position={new UDim2(0.1, 0, 0.9, -60)} Size={new UDim2(0, 1000, 0, 0)}>
-        <uigridlayout FillDirection={Enum.FillDirection.Vertical} SortOrder={Enum.SortOrder.LayoutOrder} />
+      <frame Position={new UDim2(0.1, 0, 0.9, -60)} Size={new UDim2(0, 1000, 0, 50)} BackgroundTransparency={1}>
+        <uigridlayout
+          CellSize={new UDim2(0, 90, 0, 90)}
+          CellPadding={new UDim2(0, 10, 0, 0)}
+          FillDirection={Enum.FillDirection.Vertical}
+          SortOrder={Enum.SortOrder.LayoutOrder}
+        />
         {contents.map((slot, i) => {
           return <InvSlot order={i} Key={i} itemName={slot.currentItem.name} amount={slot.size} />
         })}

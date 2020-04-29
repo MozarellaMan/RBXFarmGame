@@ -1,5 +1,5 @@
 -- Compiled with https://roblox-ts.github.io v0.3.2
--- April 28, 2020, 5:46 PM British Summer Time
+-- April 29, 2020, 8:22 PM British Summer Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local exports = {};
@@ -63,11 +63,36 @@ do
 			end;
 		until true;
 	end;
+	function InventorySlot:removeItem(item, amount)
+		if amount == nil then amount = 1; end;
+		local _0 = self.state;
+		repeat
+			if _0 == "empty" then
+				return self:makeEmpty();
+			end;
+			if _0 == "full" or _0 == "occupied" then
+				local changedSize;
+				if self.size - amount > 0 then
+					changedSize = self.size - amount;
+				else
+					changedSize = 0;
+				end;
+				if changedSize > 0 then
+					return InventorySlot.new(item, changedSize, "occupied");
+				else
+					return self:makeEmpty();
+				end;
+			end;
+		until true;
+	end;
 	function InventorySlot:isEmpty()
 		return self.state == "empty";
 	end;
 	function InventorySlot:isFull()
 		return self.state == "full";
+	end;
+	function InventorySlot:makeEmpty()
+		return InventorySlot.new(Empty, 0, "empty");
 	end;
 end;
 exports.InventorySlot = InventorySlot;
