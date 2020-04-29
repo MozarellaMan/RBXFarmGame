@@ -3,28 +3,50 @@ import { InvSlot } from "client/InventoryGUI/InvSlotComp"
 import { InventorySlot } from "shared/inventory/invSlot"
 import Net from "@rbxts/net"
 import { Inventory } from "shared/inventory/inventory"
+import { ReplicatedFirst } from "@rbxts/services"
 const Players = game.GetService("Players")
 
 let handle: Roact.ComponentInstanceHandle
 
-const InventoryGui = (props: { contents: Array<InventorySlot> }) => {
-  const { contents } = props
+interface InvState {
+  selectedSlot: number
+}
 
-  return (
-    <screengui>
-      <frame Position={new UDim2(0.1, 0, 0.9, -60)} Size={new UDim2(0, 1000, 0, 50)} BackgroundTransparency={1}>
-        <uigridlayout
-          CellSize={new UDim2(0, 90, 0, 90)}
-          CellPadding={new UDim2(0, 10, 0, 0)}
-          FillDirection={Enum.FillDirection.Vertical}
-          SortOrder={Enum.SortOrder.LayoutOrder}
-        />
-        {contents.map((slot, i) => {
-          return <InvSlot order={i} Key={i} itemName={slot.currentItem.name} amount={slot.size} />
-        })}
-      </frame>
-    </screengui>
-  )
+class InventoryGui extends Roact.Component<{ contents: Array<InventorySlot> }, InvState> {
+  constructor(props: { contents: Array<InventorySlot> }) {
+    super(props)
+
+    this.setState({
+      selectedSlot: -1,
+    })
+  }
+
+  render(): Roact.Element {
+    return (
+      <screengui>
+        <frame Position={new UDim2(0.1, 0, 0.9, -60)} Size={new UDim2(0, 1000, 0, 50)} BackgroundTransparency={1}>
+          <uigridlayout
+            CellSize={new UDim2(0, 90, 0, 90)}
+            CellPadding={new UDim2(0, 10, 0, 0)}
+            FillDirection={Enum.FillDirection.Vertical}
+            SortOrder={Enum.SortOrder.LayoutOrder}
+          />
+          {this.props.contents.map((slot, i) => {
+            return (
+              <InvSlot
+                order={i}
+                Key={i}
+                itemName={slot.currentItem.name}
+                amount={slot.size}
+                onClick={() => this.setState({ selectedSlot: i })}
+                selected={this.state.selectedSlot === i}
+              />
+            )
+          })}
+        </frame>
+      </screengui>
+    )
+  }
 }
 
 const PlayerGui = Players.LocalPlayer!.FindFirstChildOfClass("PlayerGui")

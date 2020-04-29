@@ -3,7 +3,6 @@ import { Players } from "@rbxts/services"
 
 interface InvSlotState {
   active: boolean
-  selected: boolean
   hovered: boolean
 }
 
@@ -12,20 +11,30 @@ const borderColour = Color3.fromRGB(102, 63, 0)
 const selectedBorderColour = Color3.fromRGB(252, 86, 3)
 const hoveredBorderColour = Color3.fromRGB(176, 91, 0)
 
-export class InvSlot extends Roact.PureComponent<{ itemName: string; amount: number; order: number }, InvSlotState> {
-  constructor(props: { itemName: string; amount: number; order: number }) {
+export class InvSlot extends Roact.PureComponent<
+  { itemName: string; amount: number; order: number; selected: boolean; onClick: Callback },
+  InvSlotState
+> {
+  selectedBinding: Roact.RoactBinding<number>
+  changeSelectedBinding: Roact.RoactBindingFunc<number>
+
+  constructor(props: { itemName: string; amount: number; order: number; selected: boolean; onClick: Callback }) {
     super(props)
+
     this.setState({
       active: true,
-      selected: false,
       hovered: false,
     })
+
+    {
+      ;[this.selectedBinding, this.changeSelectedBinding] = Roact.createBinding(0)
+    }
   }
 
   public render(): Roact.Element {
-    const { active, selected, hovered } = this.state
+    const { active, hovered } = this.state
 
-    const clickBorder = selected ? selectedBorderColour : borderColour
+    const clickBorder = this.props.selected ? selectedBorderColour : borderColour
     const hoveredBorder = hovered ? hoveredBorderColour : borderColour
 
     return (
@@ -37,7 +46,7 @@ export class InvSlot extends Roact.PureComponent<{ itemName: string; amount: num
           Event={{
             MouseEnter: (rbx) => this.setState({ hovered: true }),
             MouseLeave: (rbx) => this.setState({ hovered: false }),
-            MouseButton1Down: (rbx) => this.setState({ selected: !selected }),
+            MouseButton1Down: (rbx) => this.props.onClick(),
           }}
           BorderSizePixel={hovered ? 5 : 3}
           BorderColor3={clickBorder}
@@ -47,8 +56,4 @@ export class InvSlot extends Roact.PureComponent<{ itemName: string; amount: num
       </frame>
     )
   }
-
-  public didMount() {}
-
-  public willUnmount() {}
 }

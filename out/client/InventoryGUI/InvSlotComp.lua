@@ -1,5 +1,5 @@
 -- Compiled with https://roblox-ts.github.io v0.3.2
--- April 29, 2020, 10:35 AM British Summer Time
+-- April 29, 2020, 10:52 PM British Summer Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local exports = {};
@@ -14,17 +14,18 @@ do
 	function InvSlot:init(props)
 		self:setState({
 			active = true;
-			selected = false;
 			hovered = false;
 		});
+		do
+			self.selectedBinding, self.changeSelectedBinding = Roact.createBinding(0);
+		end;
 	end;
 	function InvSlot:render()
 		local _0 = self.state;
 		local active = _0.active;
-		local selected = _0.selected;
 		local hovered = _0.hovered;
 		local clickBorder;
-		if selected then
+		if self.props.selected then
 			clickBorder = selectedBorderColour;
 		else
 			clickBorder = borderColour;
@@ -64,9 +65,7 @@ do
 							});
 						end,
 						[Roact.Event.MouseButton1Down] = function(rbx)
-							return self:setState({
-								selected = not (selected);
-							});
+							return self.props.onClick();
 						end,
 						BorderSizePixel = _1,
 						BorderColor3 = clickBorder,
@@ -76,10 +75,6 @@ do
 				),
 			}
 		);
-	end;
-	function InvSlot:didMount()
-	end;
-	function InvSlot:willUnmount()
 	end;
 end;
 exports.InvSlot = InvSlot;
