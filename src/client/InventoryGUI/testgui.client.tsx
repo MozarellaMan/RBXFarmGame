@@ -12,8 +12,8 @@ interface InvState {
   selectedSlot: number
 }
 
-class InventoryGui extends Roact.Component<{ contents: Array<InventorySlot> }, InvState> {
-  constructor(props: { contents: Array<InventorySlot> }) {
+class InventoryGui extends Roact.Component<{ contents: Array<InventorySlot>; activeSlot: IntValue }, InvState> {
+  constructor(props: { contents: Array<InventorySlot>; activeSlot: IntValue }) {
     super(props)
 
     this.setState({
@@ -38,7 +38,7 @@ class InventoryGui extends Roact.Component<{ contents: Array<InventorySlot> }, I
                 Key={i}
                 itemName={slot.currentItem.name}
                 amount={slot.size}
-                onClick={() => this.setState({ selectedSlot: i })}
+                onClick={() => this.setState({ selectedSlot: this.state.selectedSlot === i ? -1 : i })}
                 selected={this.state.selectedSlot === i}
               />
             )
@@ -46,6 +46,14 @@ class InventoryGui extends Roact.Component<{ contents: Array<InventorySlot> }, I
         </frame>
       </screengui>
     )
+  }
+
+  didMount() {
+    this.setState({ selectedSlot: this.props.activeSlot.Value })
+  }
+
+  willUnmount() {
+    this.props.activeSlot.Value = this.state.selectedSlot
   }
 }
 
@@ -59,7 +67,9 @@ const updateInventory = Net.WaitForClientEventAsync("inventoryChanged").then((ev
         .then((inv: Inventory) => {
           const invContents = inv.contents
 
-          const inventoryElement = <InventoryGui contents={invContents} />
+          const activeSlot = Players.LocalPlayer.WaitForChild("activeSlot") as IntValue
+
+          const inventoryElement = <InventoryGui contents={invContents} activeSlot={activeSlot} />
 
           if (handle) Roact.unmount(handle)
 

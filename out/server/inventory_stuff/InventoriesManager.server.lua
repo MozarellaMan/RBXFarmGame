@@ -1,5 +1,5 @@
 -- Compiled with https://roblox-ts.github.io v0.3.2
--- April 29, 2020, 9:15 PM British Summer Time
+-- April 30, 2020, 11:16 AM British Summer Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local Players = TS.import(script, TS.getModule(script, "services")).Players;
@@ -14,6 +14,10 @@ local getPlayerInventory = Net.CreateFunction("getPlayerInventory");
 Players.PlayerAdded:Connect(function(player)
 	print(player.AccountAge, player.Name, player.CameraMode);
 	local newInv = Inventory.new(player);
+	local activeSlotVal = Instance.new("IntValue");
+	activeSlotVal.Value = -1;
+	activeSlotVal.Name = "activeSlot";
+	activeSlotVal.Parent = player;
 	Inventories[player] = newInv;
 	inventoryChanged:SendToPlayer(player);
 end);

@@ -12,6 +12,10 @@ const getPlayerInventory = Net.CreateFunction("getPlayerInventory")
 Players.PlayerAdded.Connect((player) => {
   print(player.AccountAge, player.Name, player.CameraMode)
   const newInv = new Inventory(player)
+  const activeSlotVal: IntValue = new Instance("IntValue")
+  activeSlotVal.Value = -1
+  activeSlotVal.Name = "activeSlot"
+  activeSlotVal.Parent = player
   Inventories.set(player, newInv)
   inventoryChanged.SendToPlayer(player)
 })
