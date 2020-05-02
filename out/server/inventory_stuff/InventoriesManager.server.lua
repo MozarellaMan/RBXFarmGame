@@ -1,15 +1,16 @@
 -- Compiled with https://roblox-ts.github.io v0.3.2
--- April 30, 2020, 8:31 PM British Summer Time
+-- May 2, 2020, 11:37 AM British Summer Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local Players = TS.import(script, TS.getModule(script, "services")).Players;
 local Inventory = TS.import(script, game:GetService("ReplicatedStorage"), "TS", "inventory", "inventory").Inventory;
 local Net = TS.import(script, TS.getModule(script, "net").out);
 local ItemIndex = TS.import(script, game:GetService("ReplicatedStorage"), "TS", "inventory", "item").ItemIndex;
+local t = TS.import(script, TS.getModule(script, "t").lib.ts);
 local Inventories = {};
 local inventoryChanged = Net.CreateEvent("inventoryChanged");
-local addItemToPlayer = Net.CreateEvent("addItemToPlayer");
-local removeItemFromPlayer = Net.CreateEvent("removeItemFromPlayer");
+local addItemToPlayer = Net.ServerEvent.new("addItemToPlayer", t.string, t.number);
+local removeItemFromPlayer = Net.ServerEvent.new("removeItemFromPlayer", t.string, t.number);
 local getPlayerInventory = Net.CreateFunction("getPlayerInventory");
 Players.PlayerAdded:Connect(function(player)
 	print(player.AccountAge, player.Name, player.CameraMode);
@@ -21,11 +22,7 @@ Players.PlayerAdded:Connect(function(player)
 	Inventories[player] = newInv;
 	inventoryChanged:SendToPlayer(player);
 end);
-addItemToPlayer:Connect(function(player, ...)
-	local args = { ... };
-	print(player, TS.array_toString(args));
-	local itemID = args[1];
-	local amount = args[2];
+addItemToPlayer:Connect(function(player, itemID, amount)
 	local itemToAdd = ItemIndex[itemID];
 	local inventoryToAffect = Inventories[player];
 	if itemToAdd and inventoryToAffect then
@@ -34,10 +31,7 @@ addItemToPlayer:Connect(function(player, ...)
 		end);
 	end;
 end);
-removeItemFromPlayer:Connect(function(player, ...)
-	local args = { ... };
-	local itemID = args[1];
-	local amount = args[2];
+removeItemFromPlayer:Connect(function(player, itemID, amount)
 	local itemToRemove = ItemIndex[itemID];
 	local inventoryToAffect = Inventories[player];
 	if itemToRemove and inventoryToAffect then

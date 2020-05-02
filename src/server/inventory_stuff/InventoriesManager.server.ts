@@ -2,11 +2,12 @@ import { Players } from "@rbxts/services"
 import { Inventory } from "shared/inventory/inventory"
 import Net from "@rbxts/net"
 import { ItemIndex, Item } from "shared/inventory/item"
+import t from "@rbxts/t"
 
 const Inventories = new Map<Player, Inventory>()
 const inventoryChanged = Net.CreateEvent("inventoryChanged")
-const addItemToPlayer = Net.CreateEvent("addItemToPlayer")
-const removeItemFromPlayer = Net.CreateEvent("removeItemFromPlayer")
+const addItemToPlayer = new Net.ServerEvent("addItemToPlayer", t.string, t.number)
+const removeItemFromPlayer = new Net.ServerEvent("removeItemFromPlayer", t.string, t.number)
 const getPlayerInventory = Net.CreateFunction("getPlayerInventory")
 
 Players.PlayerAdded.Connect((player) => {
@@ -20,11 +21,7 @@ Players.PlayerAdded.Connect((player) => {
   inventoryChanged.SendToPlayer(player)
 })
 
-addItemToPlayer.Connect((player, ...args: Array<unknown>) => {
-  print(player, args.toString())
-  const itemID = args[0] as string
-  const amount = args[1] as number
-
+addItemToPlayer.Connect((player, itemID, amount) => {
   const itemToAdd = ItemIndex.get(itemID) as Item
 
   const inventoryToAffect = Inventories.get(player)
@@ -36,10 +33,7 @@ addItemToPlayer.Connect((player, ...args: Array<unknown>) => {
       .catch((excep: unknown) => print(excep))
 })
 
-removeItemFromPlayer.Connect((player, ...args: Array<unknown>) => {
-  const itemID = args[0] as string
-  const amount = args[1] as number
-
+removeItemFromPlayer.Connect((player, itemID, amount) => {
   const itemToRemove = ItemIndex.get(itemID) as Item
 
   const inventoryToAffect = Inventories.get(player)
