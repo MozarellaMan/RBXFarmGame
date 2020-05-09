@@ -1,3 +1,3 @@
-import { makeHello } from "shared/inventory/module"
+import { makeHello } from "shared/inventory/module";
 
-print(makeHello("main.client.ts"))
+print(makeHello("main.client.ts"));

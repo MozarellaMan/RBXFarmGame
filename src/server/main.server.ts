@@ -1,1 +1,1 @@
-import { makeHello } from "shared/inventory/module"
+import { makeHello } from "shared/inventory/module";

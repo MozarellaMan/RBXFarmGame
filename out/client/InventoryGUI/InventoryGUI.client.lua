@@ -1,5 +1,5 @@
 -- Compiled with https://roblox-ts.github.io v0.3.2
--- May 2, 2020, 11:13 AM British Summer Time
+-- May 9, 2020, 7:45 PM British Summer Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local Roact = TS.import(script, TS.getModule(script, "roact").roact.src);
@@ -13,13 +13,12 @@ local InventoryCache;
 local PlayerGui = Players.LocalPlayer:FindFirstChildOfClass("PlayerGui");
 local getInventory = function()
 	return TS.Promise.new(function(resolve, reject)
-		local getInventory = Net.WaitForClientFunctionAsync("getPlayerInventory"):andThen(function(result)
-			local response = result:CallServerAsync(Players.LocalPlayer):andThen(function(inv)
-				resolve(inv);
-				InventoryCache = inv;
-			end):catch(function(excep)
-				return reject(excep);
-			end);
+		local getInventory = Net.ClientAsyncFunction.new("getPlayerInventory");
+		getInventory:CallServerAsync(Players.LocalPlayer):andThen(function(result)
+			InventoryCache = result;
+			resolve(result);
+		end):catch(function(err)
+			return reject(err);
 		end);
 	end);
 end;
@@ -54,11 +53,7 @@ local updateInventoryGUI = TS.async(function()
 end);
 local updateInventory = Net.WaitForClientEventAsync("inventoryChanged"):andThen(function(event)
 	event:Connect(function()
-		local getInventory = Net.WaitForClientFunctionAsync("getPlayerInventory"):andThen(function(result)
-			local response = result:CallServerAsync(Players.LocalPlayer):andThen(function(inv)
-				mountInventoryGUI();
-			end);
-		end);
+		mountInventoryGUI();
 	end);
 end);
 hotbarSelectEvent:bind(function()

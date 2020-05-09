@@ -1,5 +1,5 @@
 -- Compiled with https://roblox-ts.github.io v0.3.2
--- May 2, 2020, 11:13 AM British Summer Time
+-- May 9, 2020, 7:45 PM British Summer Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local exports = {};
@@ -15,7 +15,7 @@ do
 		self:constructor(...);
 		return self;
 	end;
-	function Inventory:constructor(owner)
+	function Inventory:constructor(owner, data)
 		self.findItemSlot = function(item)
 			return TS.Promise.new(function(resolve, reject)
 				local resultIndexes = TS.array_filter(TS.array_map(self.contents, function(slot, i)
@@ -38,9 +38,23 @@ do
 			end);
 		end;
 		self.owner = owner;
-		self.maxSize = 12;
-		self.size = 0;
-		self.contents = table.create(self.maxSize, InventorySlot.new());
+		if data then
+			self.maxSize = data.maxSize;
+		else
+			self.maxSize = 12;
+		end;
+		if data then
+			self.size = data.size;
+		else
+			self.size = 0;
+		end;
+		if data then
+			self.contents = TS.array_map(data.contents, function(slotData)
+				return InventorySlot.new(slotData);
+			end);
+		else
+			self.contents = table.create(self.maxSize, InventorySlot.new());
+		end;
 	end;
 	function Inventory:freeItemSlotExists(item)
 		return (table.find(TS.array_map(TS.array_filter(self.contents, function(slot)
@@ -105,7 +119,7 @@ do
 			end;
 		end);
 	end;
-	Inventory.takeItem = TS.async(function(self, item, amount)
+	function Inventory:takeItem(item, amount)
 		if amount == nil then amount = 1; end;
 		return TS.Promise.new(TS.async(function(resolve, reject)
 			local itemExists = self:itemExists(item);
@@ -123,7 +137,17 @@ do
 				reject("Item does not exist!");
 			end;
 		end));
-	end);
+	end;
+	function Inventory:exportData()
+		local invData = {
+			contents = TS.array_map(self.contents, function(slot)
+				return slot:exportData();
+			end);
+			maxSize = self.maxSize;
+			size = self.size;
+		};
+		return invData;
+	end;
 end;
 exports.Inventory = Inventory;
 return exports;

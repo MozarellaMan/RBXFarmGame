@@ -23,7 +23,7 @@
         "prettier/prettier": [
             "warn",
             {
-                "semi": false,
+                "semi": true,
                 "trailingComma": "all",
                 "singleQuote": false,
                 "printWidth": 120,
