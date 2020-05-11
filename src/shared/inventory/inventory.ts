@@ -1,6 +1,5 @@
 /* eslint-disable roblox-ts/lua-truthiness */
-import { Players } from "@rbxts/services";
-import { Item } from "shared/inventory/item";
+import { Item } from "ServerStorage/item";
 import { InventorySlot, SlotData } from "shared/inventory/invSlot";
 
 export interface InventoryData {
@@ -16,12 +15,19 @@ export class Inventory {
   size: number;
 
   constructor(owner: Player, data?: InventoryData) {
+    const savedIndexes = data ? data.contents.map((slotData) => slotData.slotIndex) : undefined;
+    // savedIndexes ? print(savedIndexes.toString()) : print("no saved inedexes.");
     this.owner = owner;
     this.maxSize = data ? data.maxSize : 12;
     this.size = data ? data.size : 0;
-    this.contents = data
-      ? data.contents.map((slotData) => new InventorySlot(slotData))
-      : new Array<InventorySlot>(this.maxSize, new InventorySlot());
+    this.contents =
+      savedIndexes && data
+        ? new Array<InventorySlot>(this.maxSize, new InventorySlot()).map((oldSlot, i) =>
+            savedIndexes.includes(i)
+              ? new InventorySlot(data.contents.find((slotData) => slotData.slotIndex === i))
+              : oldSlot,
+          )
+        : new Array<InventorySlot>(this.maxSize, new InventorySlot());
   }
 
   freeItemSlotExists(item: Item): boolean {
@@ -95,7 +101,7 @@ export class Inventory {
 
   exportData(): InventoryData {
     const invData: InventoryData = {
-      contents: this.contents.map((slot) => slot.exportData()),
+      contents: this.contents.mapFiltered((slot, i) => (!slot.isEmpty() ? slot.exportData(i) : undefined)),
       maxSize: this.maxSize,
       size: this.size,
     };

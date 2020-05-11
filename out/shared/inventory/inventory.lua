@@ -1,5 +1,5 @@
 -- Compiled with https://roblox-ts.github.io v0.3.2
--- May 9, 2020, 7:45 PM British Summer Time
+-- May 11, 2020, 6:10 PM British Summer Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local exports = {};
@@ -37,6 +37,14 @@ do
 				local _ = _0;
 			end);
 		end;
+		local savedIndexes;
+		if data then
+			savedIndexes = TS.array_map(data.contents, function(slotData)
+				return slotData.slotIndex;
+			end);
+		else
+			savedIndexes = nil;
+		end;
 		self.owner = owner;
 		if data then
 			self.maxSize = data.maxSize;
@@ -48,9 +56,15 @@ do
 		else
 			self.size = 0;
 		end;
-		if data then
-			self.contents = TS.array_map(data.contents, function(slotData)
-				return InventorySlot.new(slotData);
+		if savedIndexes and data then
+			self.contents = TS.array_map(table.create(self.maxSize, InventorySlot.new()), function(oldSlot, i)
+				if table.find(savedIndexes, i) ~= nil then
+					return InventorySlot.new(TS.array_find(data.contents, function(slotData)
+						return slotData.slotIndex == i;
+					end));
+				else
+					return oldSlot;
+				end;
 			end);
 		else
 			self.contents = table.create(self.maxSize, InventorySlot.new());
@@ -140,8 +154,12 @@ do
 	end;
 	function Inventory:exportData()
 		local invData = {
-			contents = TS.array_map(self.contents, function(slot)
-				return slot:exportData();
+			contents = TS.array_mapFiltered(self.contents, function(slot, i)
+				if not (slot:isEmpty()) then
+					return slot:exportData(i);
+				else
+					return nil;
+				end;
 			end);
 			maxSize = self.maxSize;
 			size = self.size;

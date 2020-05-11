@@ -1,9 +1,6 @@
 import * as Roact from "@rbxts/roact";
-import { InvSlot } from "client/InventoryGUI/Components/InvSlotComp";
-import { InventorySlot } from "shared/inventory/invSlot";
-import Net, { ClientAsyncFunction } from "@rbxts/net";
+import Net from "@rbxts/net";
 import { Inventory } from "shared/inventory/inventory";
-import { ReplicatedFirst } from "@rbxts/services";
 import { InventoryGui } from "./Components/InventoryHotbarComp";
 import { hotbarSelectEvent } from "client/InventoryController/hotbarSelectEvent";
 

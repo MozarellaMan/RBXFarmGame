@@ -1,5 +1,6 @@
 import { Players, UserInputService } from "@rbxts/services";
 import { hotbarSelectEvent } from "./hotbarSelectEvent";
+import Net from "@rbxts/net";
 
 const activeSlot = Players.LocalPlayer.WaitForChild("activeSlot") as IntValue;
 const hotbarInputCodes = new Array<number>(9, 0).map((_, indx) => 49 + indx).concat([48, 45, 61]);
@@ -15,6 +16,12 @@ const changeActiveSlot = (input: InputObject) => {
     }
   }
 };
+
+activeSlot.Changed.Connect((newSlot) => {
+  if (newSlot !== -1) {
+    Net.WaitForClientEventAsync("equipItemToPlayer").then((event) => event.SendToServer(newSlot));
+  }
+});
 
 UserInputService.InputBegan.Connect((input) => {
   changeActiveSlot(input);

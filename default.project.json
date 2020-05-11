@@ -8,6 +8,12 @@
 				"$path": "out/server"
 			}
 		},
+		"ServerStorage" : {
+			"$className": "ServerStorage",
+			"TS": {
+				"$path": "out/ServerStorage"
+			}
+		},
 		"ReplicatedStorage": {
 			"$className": "ReplicatedStorage",
 			"rbxts_include": {

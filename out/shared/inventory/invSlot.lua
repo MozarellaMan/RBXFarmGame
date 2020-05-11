@@ -1,10 +1,10 @@
 -- Compiled with https://roblox-ts.github.io v0.3.2
--- May 9, 2020, 7:43 PM British Summer Time
+-- May 11, 2020, 6:10 PM British Summer Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local exports = {};
 local InventorySlot;
-local _0 = TS.import(script, game:GetService("ReplicatedStorage"), "TS", "inventory", "item");
+local _0 = TS.import(script, game:GetService("ServerStorage"), "TS", "item");
 local EmptyItem, ItemIndex = _0.Empty, _0.ItemIndex;
 local State;
 do
@@ -32,8 +32,8 @@ do
 		if size == nil then size = 0; end;
 		if state == nil then state = State.Empty; end;
 		if data then
-			if ItemIndex[data.item] then
-				self.currentItem = ItemIndex[data.item];
+			if ItemIndex[data.itemId] then
+				self.currentItem = ItemIndex[data.itemId];
 			else
 				self.currentItem = item;
 			end;
@@ -114,7 +114,8 @@ do
 		until true;
 	end;
 	function InventorySlot:isEmpty()
-		return self.state == State.Empty;
+		local _1 = self.state == State.Empty;
+		return _1 or self.currentItem.id == "emp";
 	end;
 	function InventorySlot:isFull()
 		return self.state == State.Full;
@@ -122,10 +123,11 @@ do
 	function InventorySlot:makeEmpty()
 		return InventorySlot.new(nil, EmptyItem, 0, State.Empty);
 	end;
-	function InventorySlot:exportData()
+	function InventorySlot:exportData(slotIndex)
 		local slotData = {
+			slotIndex = slotIndex;
 			state = self.state;
-			item = self.currentItem.id;
+			itemId = self.currentItem.id;
 			size = self.size;
 		};
 		return slotData;

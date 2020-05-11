@@ -1,7 +1,5 @@
 import Net from "@rbxts/net";
-import { Workspace, Players } from "@rbxts/services";
-import { Items } from "shared/inventory/item";
-
+import { Workspace } from "@rbxts/services";
 type ItemGiverPart = Part & {
   ClickDetector: ClickDetector;
 };

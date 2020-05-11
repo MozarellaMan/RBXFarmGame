@@ -1,4 +1,4 @@
-import { Item, Items, Empty as EmptyItem, ItemIndex } from "shared/inventory/item";
+import { Item, Empty as EmptyItem, ItemIndex } from "ServerStorage/item";
 
 enum State {
   Empty,
@@ -7,8 +7,9 @@ enum State {
 }
 
 export interface SlotData {
+  slotIndex: number;
   state: State;
-  item: string;
+  itemId: string;
   size: number;
 }
 
@@ -18,7 +19,7 @@ export class InventorySlot {
   state: State;
 
   constructor(data?: SlotData, item = EmptyItem, size = 0, state: State = State.Empty) {
-    this.currentItem = data ? ((ItemIndex.get(data.item) ? ItemIndex.get(data.item) : item) as Item) : item;
+    this.currentItem = data ? ((ItemIndex.get(data.itemId) ? ItemIndex.get(data.itemId) : item) as Item) : item;
     this.size = data ? data.size : size;
     this.state = data ? data.state : state;
   }
@@ -57,7 +58,7 @@ export class InventorySlot {
   }
 
   isEmpty() {
-    return this.state === State.Empty;
+    return this.state === State.Empty || this.currentItem.id === "emp";
   }
 
   isFull() {
@@ -68,8 +69,13 @@ export class InventorySlot {
     return new InventorySlot(undefined, EmptyItem, 0, State.Empty);
   }
 
-  exportData(): SlotData {
-    const slotData: SlotData = { state: this.state, item: this.currentItem.id, size: this.size };
+  exportData(slotIndex: number): SlotData {
+    const slotData: SlotData = {
+      slotIndex: slotIndex,
+      state: this.state,
+      itemId: this.currentItem.id,
+      size: this.size,
+    };
     return slotData;
   }
 }
