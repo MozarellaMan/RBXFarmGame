@@ -1,8 +1,9 @@
 -- Compiled with https://roblox-ts.github.io v0.3.2
--- May 11, 2020, 6:10 PM British Summer Time
+-- May 12, 2020, 10:13 AM British Summer Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
-local Players = TS.import(script, TS.getModule(script, "services")).Players;
+local _0 = TS.import(script, TS.getModule(script, "services"));
+local Players, ServerStorage = _0.Players, _0.ServerStorage;
 local Inventory = TS.import(script, game:GetService("ReplicatedStorage"), "TS", "inventory", "inventory").Inventory;
 local Net = TS.import(script, TS.getModule(script, "net").out);
 local ItemIndex = TS.import(script, game:GetService("ServerStorage"), "TS", "item").ItemIndex;
@@ -12,8 +13,10 @@ local Inventories = {};
 local inventoryChanged = Net.CreateEvent("inventoryChanged");
 local addItemToPlayer = Net.ServerEvent.new("addItemToPlayer", t.string, t.number);
 local equipItemToPlayer = Net.ServerEvent.new("equipItemToPlayer", t.number);
+local dequipItemsFromPlayer = Net.ServerEvent.new("dequipItemsFromPlayer");
 local removeItemFromPlayer = Net.ServerEvent.new("removeItemFromPlayer", t.string, t.number);
 local getPlayerInventory = Net.ServerAsyncFunction.new("getPlayerInventory");
+local toolFolder = ServerStorage:WaitForChild("tools");
 Players.PlayerAdded:Connect(TS.async(function(player)
 	local activeSlotVal = Instance.new("IntValue");
 	activeSlotVal.Value = -1;
@@ -42,7 +45,31 @@ addItemToPlayer:Connect(function(player, itemID, amount)
 end);
 equipItemToPlayer:Connect(function(player, invSlotNum)
 	if not (Inventories[player].contents[invSlotNum + 1]:isEmpty()) then
+		local itemId = Inventories[player].contents[invSlotNum + 1].currentItem.id;
 		print(player.Name .. " wants to equip " .. Inventories[player].contents[invSlotNum + 1].currentItem.name .. "!");
+		local humanoid = player.Character:FindFirstChildOfClass("Humanoid");
+		local toolToEquip = toolFolder:FindFirstChild(itemId);
+		if humanoid and toolToEquip then
+			print("humanoid " .. tostring(humanoid) .. " and tool " .. toolToEquip.Name .. " exists!");
+			local tool = toolToEquip:Clone();
+			tool.Parent = player.Character;
+			humanoid:EquipTool(tool);
+		end;
+	elseif Inventories[player].contents[invSlotNum + 1]:isEmpty() then
+		local backpack = player:WaitForChild("Backpack");
+		local humanoid = player.Character:FindFirstChildOfClass("Humanoid");
+		if backpack and humanoid then
+			humanoid:UnequipTools();
+			backpack:ClearAllChildren();
+		end;
+	end;
+end);
+dequipItemsFromPlayer:Connect(function(player)
+	local backpack = player:WaitForChild("Backpack");
+	local humanoid = player.Character:FindFirstChildOfClass("Humanoid");
+	if backpack and humanoid then
+		humanoid:UnequipTools();
+		backpack:ClearAllChildren();
 	end;
 end);
 removeItemFromPlayer:Connect(function(player, itemID, amount)

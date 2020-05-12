@@ -1,5 +1,5 @@
 -- Compiled with https://roblox-ts.github.io v0.3.2
--- May 11, 2020, 5:24 PM British Summer Time
+-- May 12, 2020, 10:11 AM British Summer Time
 
 local TS = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("RuntimeLib"));
 local _0 = TS.import(script, TS.getModule(script, "services"));
@@ -25,9 +25,13 @@ local changeActiveSlot = function(input)
 	end;
 end;
 activeSlot.Changed:Connect(function(newSlot)
-	if newSlot ~= -1 then
+	if (newSlot ~= -1) and (newSlot < 13) then
 		Net.WaitForClientEventAsync("equipItemToPlayer"):andThen(function(event)
 			return event:SendToServer(newSlot);
+		end);
+	elseif newSlot == -1 then
+		Net.WaitForClientEventAsync("dequipItemsFromPlayer"):andThen(function(event)
+			return event:SendToServer();
 		end);
 	end;
 end);

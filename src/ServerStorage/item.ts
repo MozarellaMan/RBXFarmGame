@@ -90,3 +90,22 @@ export const Empty: Item = {
   class: ItemClass.Empty,
   cost: 0,
 };
+
+export type tools = Folder & {
+  rck: Tool & {
+    Handle: UnionOperation;
+  };
+  dia: Tool & {
+    Handle: UnionOperation;
+  };
+  brd: Tool & {
+    Handle: MeshPart;
+  };
+  waxe: Tool & {
+    Handle: Part & {
+      Mesh: SpecialMesh;
+      SlashSound: Sound;
+    };
+    SwordScript: Script;
+  };
+};

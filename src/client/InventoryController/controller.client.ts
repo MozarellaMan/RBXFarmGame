@@ -18,8 +18,10 @@ const changeActiveSlot = (input: InputObject) => {
 };
 
 activeSlot.Changed.Connect((newSlot) => {
-  if (newSlot !== -1) {
+  if (newSlot !== -1 && newSlot < 13) {
     Net.WaitForClientEventAsync("equipItemToPlayer").then((event) => event.SendToServer(newSlot));
+  } else if (newSlot === -1) {
+    Net.WaitForClientEventAsync("dequipItemsFromPlayer").then((event) => event.SendToServer());
   }
 });
 
