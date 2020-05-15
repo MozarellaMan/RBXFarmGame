@@ -5,7 +5,10 @@ interface InvState {
   selectedSlot: number;
 }
 
-export class InventoryGui extends Roact.Component<{ contents: Array<InventorySlot>; activeSlot: IntValue }, InvState> {
+export class InventoryGui extends Roact.Component<
+  { contents: Array<InventorySlot>; activeSlot: IntValue },
+  InvState
+> {
   constructor(props: { contents: Array<InventorySlot>; activeSlot: IntValue }) {
     super(props);
 
@@ -17,7 +20,11 @@ export class InventoryGui extends Roact.Component<{ contents: Array<InventorySlo
   render(): Roact.Element {
     return (
       <screengui>
-        <frame Position={new UDim2(0.1, 0, 0.9, -60)} Size={new UDim2(0, 1000, 0, 50)} BackgroundTransparency={1}>
+        <frame
+          Position={new UDim2(0.1, 0, 0.9, -60)}
+          Size={new UDim2(0, 1000, 0, 50)}
+          BackgroundTransparency={1}
+        >
           <uigridlayout
             CellSize={new UDim2(0, 90, 0, 90)}
             CellPadding={new UDim2(0, 10, 0, 0)}
@@ -32,7 +39,8 @@ export class InventoryGui extends Roact.Component<{ contents: Array<InventorySlo
                 itemName={slot.currentItem.name}
                 amount={slot.size}
                 onClick={() => {
-                  this.props.activeSlot.Value = this.props.activeSlot.Value === i ? -1 : i;
+                  this.props.activeSlot.Value =
+                    this.props.activeSlot.Value === i ? -1 : i;
                   this.setState({ selectedSlot: this.props.activeSlot.Value });
                 }}
                 selected={this.props.activeSlot.Value === i}

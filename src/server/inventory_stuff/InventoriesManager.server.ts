@@ -95,11 +95,9 @@ removeItemFromPlayer.Connect((player, itemID, amount) => {
 getPlayerInventory.SetCallback(
   (player): Promise<Inventory> => {
     return new Promise((resolve, reject) => {
-      if (Inventories.get(player) === undefined) {
-        reject("inventory does not exist!");
-      } else {
-        resolve(Inventories.get(player) as Inventory);
-      }
+      if (Inventories.get(player) === undefined) return reject("inventory does not exist!");
+
+      resolve(Inventories.get(player) as Inventory);
     });
   },
 );
