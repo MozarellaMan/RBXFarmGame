@@ -12,7 +12,7 @@ const buttons: Array<ItemGiverPart> = [
 
 buttons.forEach((button, i) => {
   button.ClickDetector.MouseClick.Connect(() => {
-    const addItemToPlayer = Net.WaitForClientEventAsync("addItemToPlayer")
+    Net.WaitForClientEventAsync("addItemToPlayer")
       .then((event) => {
         switch (i) {
           case 0:
@@ -30,7 +30,7 @@ buttons.forEach((button, i) => {
   });
 
   button.ClickDetector.RightMouseClick.Connect(() => {
-    const removeItemFromPlayer = Net.WaitForClientEventAsync("removeItemFromPlayer")
+    Net.WaitForClientEventAsync("removeItemFromPlayer")
       .then((event) => {
         switch (i) {
           case 0:
