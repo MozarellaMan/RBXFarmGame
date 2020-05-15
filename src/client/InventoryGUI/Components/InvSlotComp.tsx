@@ -12,13 +12,25 @@ const selectedBorderColour = Color3.fromRGB(252, 86, 3);
 const hoveredBorderColour = Color3.fromRGB(176, 91, 0);
 
 export class InvSlot extends Roact.PureComponent<
-  { itemName: string; amount: number; order: number; selected: boolean; onClick: Callback },
+  {
+    itemName: string;
+    amount: number;
+    order: number;
+    selected: boolean;
+    onClick: Callback;
+  },
   InvSlotState
 > {
   selectedBinding: Roact.RoactBinding<number>;
   changeSelectedBinding: Roact.RoactBindingFunc<number>;
 
-  constructor(props: { itemName: string; amount: number; order: number; selected: boolean; onClick: Callback }) {
+  constructor(props: {
+    itemName: string;
+    amount: number;
+    order: number;
+    selected: boolean;
+    onClick: Callback;
+  }) {
     super(props);
 
     this.setState({
@@ -27,14 +39,18 @@ export class InvSlot extends Roact.PureComponent<
     });
 
     {
-      [this.selectedBinding, this.changeSelectedBinding] = Roact.createBinding(0);
+      [this.selectedBinding, this.changeSelectedBinding] = Roact.createBinding(
+        0
+      );
     }
   }
 
   public render(): Roact.Element {
     const { active, hovered } = this.state;
 
-    const clickBorder = this.props.selected ? selectedBorderColour : borderColour;
+    const clickBorder = this.props.selected
+      ? selectedBorderColour
+      : borderColour;
     const hoveredBorder = hovered ? hoveredBorderColour : borderColour;
 
     return (
@@ -44,9 +60,9 @@ export class InvSlot extends Roact.PureComponent<
           Size={new UDim2(1, 0, 1, 0)}
           Text={`${this.props.itemName} \n ${this.props.amount}`}
           Event={{
-            MouseEnter: (rbx) => this.setState({ hovered: true }),
-            MouseLeave: (rbx) => this.setState({ hovered: false }),
-            MouseButton1Down: (rbx) => this.props.onClick(),
+            MouseEnter: () => this.setState({ hovered: true }),
+            MouseLeave: () => this.setState({ hovered: false }),
+            MouseButton1Down: () => this.props.onClick(),
           }}
           BorderSizePixel={hovered ? 5 : 3}
           BorderColor3={clickBorder}
