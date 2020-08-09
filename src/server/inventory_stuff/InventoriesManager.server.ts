@@ -4,6 +4,7 @@ import Net from "@rbxts/net";
 import { Item, ItemIndex, tools } from "ServerStorage/item";
 import t from "@rbxts/t";
 import DataStore2 from "@rbxts/datastore2";
+import { createLocalInventorySlot, createInventoryDataStore, updateLocalInventory } from "./InventoryManagerHelper";
 
 const Inventories = new Map<Player, Inventory>();
 const inventoryChanged = Net.CreateEvent("inventoryChanged");
@@ -15,20 +16,13 @@ const getPlayerInventory = new Net.ServerAsyncFunction("getPlayerInventory");
 const toolFolder = ServerStorage.WaitForChild("tools") as tools;
 
 Players.PlayerAdded.Connect(async (player) => {
-  // CREATING LOCAL ACTIVE INVENTORY SLOT
-  const activeSlotVal: IntValue = new Instance("IntValue");
-  activeSlotVal.Value = -1;
-  activeSlotVal.Name = "activeSlot";
-  activeSlotVal.Parent = player;
 
-  // DATASTORE STUFF
-  const invStore = DataStore2<InventoryData>("inventory", player);
-  const storeInv = invStore.GetTable(new Inventory(player).exportData());
-  invStore.OnUpdate(() => inventoryChanged.SendToPlayer(player));
-  invStore.AfterSave((inv) => print("Done saving inventory!"));
-  // SET LOCAL INVENTORY
-  Inventories.set(player, new Inventory(player, storeInv));
-  inventoryChanged.SendToPlayer(player);
+  createLocalInventorySlot(player);
+
+  const storedInventory = createInventoryDataStore(player,inventoryChanged);
+
+  updateLocalInventory(player,storedInventory,Inventories,inventoryChanged);
+  
 });
 
 addItemToPlayer.Connect((player, itemID, amount) => {
@@ -101,3 +95,5 @@ getPlayerInventory.SetCallback(
     });
   },
 );
+
+
